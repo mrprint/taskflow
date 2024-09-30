@@ -18,7 +18,12 @@ auto make_for_each_task(B b, E e, C c, P part = P()) {
     E_t end = e;
 
     size_t W = rt.executor().num_workers();
+
+    #if defined(_MSC_BUILD)
+    size_t N = static_cast<size_t>(std::distance(beg, end));
+    #else
     size_t N = std::distance(beg, end);
+    #endif
 
     // only myself - no need to spawn another graph
     if(W <= 1 || N <= part.chunk_size()) {
